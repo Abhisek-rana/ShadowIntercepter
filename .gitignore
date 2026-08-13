@@ -1,0 +1,8 @@
+venv/
+certs/
+logs/
+__pycache__/
+*.pyc
+.vscode/
+*.egg-info/
+.DS_Store
