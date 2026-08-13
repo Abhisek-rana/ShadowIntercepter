@@ -102,4 +102,4 @@ This tool is built for educational purposes and authorized security testing only
 
 ## Author
 
-Built by [Your Name] — Cybersecurity Trainer, working toward Offensive Security / VAPT roles.
+Built by [Abhisek Rana] — Cybersecurity Trainer, working toward Offensive Security / VAPT roles.
