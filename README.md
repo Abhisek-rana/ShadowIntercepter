@@ -56,7 +56,7 @@ ShadowIntercepter/
 ## Installation
 
 ```bash
-git clone https://github.com/<your-username>/ShadowIntercepter.git
+git clone https://github.com/Abhisek-rana/ShadowIntercepter.git
 cd ShadowIntercepter
 python3 -m venv venv
 source venv/bin/activate      # Windows: venv\Scripts\activate
@@ -66,15 +66,31 @@ pip install -r requirements.txt
 ## Usage
 
 1. Start the application:
-   ```bash
+```bash
    python3 -m src.gui.main_window
-   ```
-2. The proxy starts automatically on `127.0.0.1:8080`.
-3. Configure your browser (e.g. via FoxyProxy) to route traffic through `127.0.0.1:8080`.
-4. Install the generated CA certificate (`certs/ca.crt`) in your browser's trusted authorities to intercept HTTPS without warnings.
-5. Use the **Proxy** tab to intercept live traffic, **HTTP History** to review it, **Repeater** to replay/edit requests, and **Bruteforce** to fuzz parameters.
+```
+   This automatically generates a unique CA certificate (`certs/ca.crt`) on first run and starts the proxy on `127.0.0.1:8080`.
 
-## Disclaimer
+2. **Configure your browser to use the proxy** (example with Firefox + FoxyProxy):
+   - Install the [FoxyProxy Standard](https://addons.mozilla.org/en-US/firefox/addon/foxyproxy-standard/) extension
+   - Add a new proxy: Host `127.0.0.1`, Port `8080`, Type `HTTP`
+   - Enable it ("Use proxy 127.0.0.1:8080" from the FoxyProxy menu)
+
+3. **Install the CA certificate so HTTPS interception works without browser warnings:**
+   - In Firefox, go to `about:preferences#privacy`
+   - Scroll down to **Certificates** → click **View Certificates**
+   - Go to the **Authorities** tab → click **Import**
+   - Select `certs/ca.crt` from your project folder
+   - Check **"Trust this CA to identify websites"** → click **OK**
+
+4. Browse normally — traffic will now flow through ShadowIntercepter:
+   - **Proxy → Intercept**: toggle "Intercept Requests" / "Intercept Responses" independently to pause and edit live traffic before it's forwarded
+   - **Proxy → HTTP History**: review every captured request/response
+   - **Repeater**: resend and edit any request, or send one directly from History/Intercept
+   - **Site Map**: see every host/endpoint discovered in the session
+   - **Bruteforce**: mark request positions with `§...§` and run Sniper / Battering Ram / Pitchfork / Cluster Bomb attacks
+
+   > Static assets (CSS/JS/images/fonts) are automatically skipped during interception so normal browsing isn't blocked — same behavior as Burp Suite's default scope filtering.
 
 This tool is built for educational purposes and authorized security testing only (e.g. personal lab environments, PortSwigger Web Security Academy, or systems you have explicit permission to test). Do not use it against systems you do not own or lack authorization to test.
 
@@ -86,4 +102,4 @@ This tool is built for educational purposes and authorized security testing only
 
 ## Author
 
-Built by [Your Name] — Cybersecurity Trainer, working toward Offensive Security / VAPT roles.
+Built by [Abhisek Rana] — Cybersecurity Trainer, working toward Offensive Security / VAPT roles.
