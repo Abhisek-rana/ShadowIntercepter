@@ -45,6 +45,30 @@ def force_connection_close(raw_bytes):
         return raw_bytes
 
 
+def force_no_compression(raw_bytes):
+    """
+    'Accept-Encoding' header ko 'identity' bana deta hai — server se
+    uncompressed response maangta hai, taaki hamara text-based processing
+    (decode/encode) response ko corrupt na kare.
+    """
+    try:
+        text = raw_bytes.decode(errors="ignore")
+        head, sep, body = text.partition("\r\n\r\n")
+        lines = head.split("\r\n")
+
+        new_lines = []
+        for line in lines:
+            if line.lower().startswith("accept-encoding:"):
+                new_lines.append("Accept-Encoding: identity")
+            else:
+                new_lines.append(line)
+
+        new_head = "\r\n".join(new_lines)
+        return (new_head + sep + body).encode()
+    except Exception:
+        return raw_bytes
+
+
 SKIP_EXTENSIONS = (
     ".css", ".js", ".png", ".jpg", ".jpeg", ".gif", ".svg", ".ico",
     ".woff", ".woff2", ".ttf", ".eot", ".map", ".webp", ".mp4", ".mp3",
@@ -110,7 +134,7 @@ def handle_https_connect(client_socket, target_host, target_port):
             req.host = target_host
             req.port = target_port
 
-            final_request_bytes = force_connection_close(request_data)
+            final_request_bytes = force_no_compression(force_connection_close(request_data))
             skip = should_skip_intercept(req.path)
 
             if intercept_manager.is_request_intercept_enabled() and not skip:
@@ -184,7 +208,7 @@ def handle_client(client_socket):
         client_socket.close()
         return
 
-    final_request_bytes = force_connection_close(req.rebuild())
+    final_request_bytes = force_no_compression(force_connection_close(req.rebuild()))
     skip = should_skip_intercept(req.path)
 
     if intercept_manager.is_request_intercept_enabled() and not skip:
