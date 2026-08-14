@@ -28,7 +28,23 @@ Built to understand *how* tools like Burp Suite work under the hood: raw TCP soc
 
 ## Screenshots
 
-*(Add these before publishing — see checklist below)*
+**Dashboard**
+![Dashboard](screenshots/dashboard.png)
+
+**Intercepting a Request**
+![Intercept](screenshots/intercept.png)
+
+**HTTP History**
+![HTTP History](screenshots/http_history.png)
+
+**Site Map**
+![Site Map](screenshots/sitemap.png)
+
+**Repeater**
+![Repeater](screenshots/repeater.png)
+
+**Bruteforce**
+![Bruteforce](screenshots/bruteforce.png)
 
 ## Tech Stack
 
