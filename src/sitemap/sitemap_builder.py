@@ -2,19 +2,25 @@ from src.history.history_store import history
 
 
 class SiteMapBuilder:
+    def __init__(self):
+        self.session_start_id = self._get_max_id()
+
+    def _get_max_id(self):
+        entries = history.get_all()
+        if not entries:
+            return 0
+        return max(e["id"] for e in entries)
+
+    def reset_session(self):
+        self.session_start_id = self._get_max_id()
+
     def build(self):
-        """
-        History se saare entries leke tree structure banata hai:
-        {
-            "example.com": {
-                "/": {"method": "GET", "status": "200"},
-                "/login": {"method": "POST", "status": "302"}
-            }
-        }
-        """
         site_map = {}
 
         for entry in history.get_all():
+            if entry["id"] <= self.session_start_id:
+                continue
+
             req = entry["request"]
             resp = entry.get("response")
 
@@ -34,7 +40,6 @@ class SiteMapBuilder:
         return site_map
 
     def print_tree(self):
-        """Terminal mein readable tree format print karta hai."""
         site_map = self.build()
         for host, paths in site_map.items():
             print(f"{host}")
